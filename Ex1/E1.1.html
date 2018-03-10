@@ -1,0 +1,54 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <title>My Geocode App</title>
+  </head>
+  <body>
+    <div class="container">
+      <h2 id="text-center">Enter GPS(lat, long): </h2>
+      <form id="location-form">
+        <input type="text" id="latlong" class="form-control form-control-lg">
+        <br>
+        <button id= "submit" class="btn btn-primary btn-block">Submit</button>
+        <div class="card-block" id="formatted-address"></div>
+      </form>
+      
+    </div>
+
+    <script>
+
+      document.getElementById('submit').addEventListener('click', geocode);
+       function geocode(e){
+        // Prevent actual submit
+        e.preventDefault();
+        var geocoder = new google.maps.Geocoder;
+        var latlng = document.getElementById('latlong').value;
+        var latlngStr = latlng.split(',', 2);
+        var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+        geocoder.geocode({'location': latlng}, function(results, status) {
+            if (status === 'OK') {
+              if (results[0]) {
+                 
+                 var formattedAddressOutput = `
+                  <ul class="list-group">
+                    <li class="list-group-item">${results[0].formatted_address}</li>
+                  </ul>`;
+                document.getElementById('formatted-address').innerHTML = formattedAddressOutput;
+              } else {
+                window.alert('No results found');
+              }
+            } else {
+              window.alert('Geocoder failed due to: ' + status);
+            }
+          });
+
+  }
+    </script>
+      <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3twGr88VzRGozBxRVmp9CdudEHU4Tb9A&callback=geocode">
+      </script>
+  </body>
+  </html>
